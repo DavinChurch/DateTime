@@ -1,0 +1,9 @@
+ DOY←DayOfYear JJJ;YMD
+⍝ Given a "Julian Day Number", return its day in that year.
+⍝ Any rank & shape array accepted.  See "Describe" for more details.
+⍝
+⍝ Written in 1998 by Davin Church of Creative Software Design
+⍝ Modified 9 March 2010 by Davin Church of Creative Software Design
+⍝ Converted from APL+Win to Dyalog June 30, 2020 by Davin Church of Creative Software Design
+
+ YMD←GD JJJ ⋄ DOY←(JJJ≠0)×1+JJJ-JD(×YMD)×101+10000×⌊|YMD÷10000
