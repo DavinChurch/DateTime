@@ -4,5 +4,10 @@
 ⍝ its range restrictions.
 
  JJJ←0.5-⍨(,nonzero←(JJJ≠0)∧~JJJ∊⎕NULL)/,JJJ ⍝ Format zeros as ''
- text←(⍴nonzero)⍴1↓(1,,nonzero)\(⊂''),pattern(1200⌶)50 1 ⎕DT JJJ
+ :Trap 0
+     text←pattern(1200⌶)50 1 ⎕DT JJJ
+ :Else
+     ⎕DMX.Message ⎕SIGNAL 11
+ :EndTrap
+ text←(⍴nonzero)⍴1↓(1,,nonzero)\(⊂''),text
  :If 0=≡nonzero ⋄ text←⊃text ⋄ :EndIf ⍝ Don't enclose scalar results
