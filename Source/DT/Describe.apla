@@ -1,0 +1,353 @@
+This text contains a description of a set of date manipulation routines
+written in APL by Davin Church of Creative Software Design.
+
+These functions are written for use by Dyalog APL v18.0 and make use of the
+⎕DT and 1200⌶ capabilities available in that version of the interpreter.
+They are designed to provide additional application-oriented capabilities
+beyond those supplied by ⎕DT and in some cases will run in earlier versions
+where ⎕DT is not available.
+
+All these functions are designed to process integers that contain dates in
+Julian Day Number form, equivalent to 50∘⎕DT form.  ⎕DT may be used to
+create values in that form from any other desired structure.  Two functions
+are also available here to convert between Julian and Gregorian forms as
+well.  These converters (and most of the other functions) also handle dates
+outside the range supported by ⎕DT.
+
+Simple day-based calculations can be performed by simply adding and
+subtracting constants to the JDN, such as applying 2415019 to convert
+between a JDN and the sorts of date values used by Microsoft Office.
+Routines are provided here to perform calculations on calendar months and
+years as well as other sorts of complex calendar operations.
+
+
+The following routines are currently available:
+
+JD          Convert a calendar date (YYYYMMDD) to a Julian Day Number (JJJJJJJ).
+GD          Convert a Julian Day Number (JJJJJJJ) to a calendar date (YYYYMMDD).
+Today       Return today's date as a Julian Day Number (JJJJJJJ).
+Now         Return a timestamp, like Today but including a fractional time.
+DayOfWeek   Return the day of the week (Sun=1 thru Sat=7) of a JDN (JJJJJJJ).
+DayOfYear   Return the day of the calendar year (1-366) of a JDN (JJJJJJJ).
+IsLeapYear  Is the given year a leap year?
+Age         Return the calendar age from a JDN (JJJJJJJ) as of today.
+BeginWeek   Return the JDN of the Sunday on or just before the given JDN.
+BeginMonth  Return the date of the first of the month of the date given.
+BeginYear   Return the date of the first of the year of the date given.
+AddMonth    Return the date that is one (or more) months from the date given.
+AddYear     Return the date that is one (or more) years from the date given.
+AddWeekday  Return the JDN of the following week day of the given JDN.
+AddWorkday  Return a date as in AddWeekday but also skip holidays.
+ExampleHoliday  For a given date, decide if it is a U.S. national bank holiday.
+Easter      For a given year, return the JDN date of the Easter holiday.
+Spell       For a given date or timestamp, spell it out in any specified format.
+Daylight    Return local Daylight Savings Time rules.
+Local       Convert a UTC JDN timestamp to a local JDN timestamp.
+UTC         Convert a local JDN timestamp to a UTC JDN timestamp.
+TimeZone    Return basic description from the local time zone.
+
+Most routines will accept an array of any size, shape, or rank and return an
+array of the same dimensions.  Operations on arrays of dates are fast and
+encouraged.  All date routines (except JD and GD) use the Julian Day Number
+style of date for simplicity.  The YYYYMMDD format is primarily used when
+passing dates to and from other systems.
+
+Dates in the (calendar) form of YYYYMMDD are single 8-digit numeric values
+where groups of digits are used to describe the parts of the date.  MM is
+the month number (01-12) and DD is the day number of the month (01-31).  The
+year (YYYY) may take on almost any value, positive or negative.  If the year
+is negative, this is indicated by making the entire date a negative number, but
+without affecting the month or day digits (i.e. they still appear to read as
+the correct decimal values).  Negative dates (years) are used to indicate dates
+prior to 1 A.D.  Since there was no year 0 (A.D. or B.C.), the year number
+(YYYY) of 0 is used to represent the calendar year 1 B.C. so that years can be
+consecutive.  A year number (YYYY) of ¯1 is used to represent the year 2 B.C.,
+and so on.  Dates are using a zero date on the proleptic Julian calendar of
+January 1, 4713 B.C. (¯47120101), and calculations can be performed on all
+dates both before and after that starting point.
+
+Important note:  Dates from 15 Oct 1582 and later are assumed to represent
+dates in the Gregorian (reform) calendar and dates from 4 Oct 1582 and earlier
+are assumed to represent dates in the (proleptic) Julian calendar, even those
+that are prior to the official adoption of the Julian calendar in 46 B.C.
+Other variations and complications in the use of historical dates (such as
+those surrounding and immediately following the adoption of the Julian calendar
+system -- 46 B.C. to 4 A.D., or the variable date of switchover to the
+Gregorian calendar) are summarily ignored.
+
+The "Julian Day Number" (also called the Julian Day or JD, but *not* the Julian
+Date) form of the dates (JJJJJJJ) is the standard way of consistently measuring
+dates regardless of the local calendar in use at any given time.  Its origin is
+at (Julian proleptic date) January 1, 4713 B.C. where the JD = 0.  In many
+Julian Day Number systems (especially those used by astronomers), dates were
+actually assigned fractional numbers so that a time of day might be so
+indicated.  In such systems, the whole value of the Julian Day represents noon
+on that day, so the previous midnight would be .5 days less and the following
+midnight would be .5 days more.  ⎕DT timestamps follow this convention.  Such
+fractional day numbers are not supported by most of these routines and all
+dates should be considered to be the whole number (noontime for astronomers)
+value for that day.  However, JD and GD have been modified to allow special
+"timestamp" formats for convenience, and these can accept and produce special
+fractional-day values which start at *midnight* (and thus are 12 hours
+different than astronomical/⎕DT day-fractions noted above).
+
+The conversion routines were modified slightly so that a Julian Day (JJJJJJJ)
+of zero is returned and accepted when the calendar date (YYYYMMDD) is zero.
+This is to facilitate the handling of "null" (e.g. empty, undefined) dates by
+use of the value zero in either format.  Unfortunately, this means that the
+exact (Julian proleptic) date of January 1, 4713 B.C. (¯47120101) is not
+fully available for use since it also equates to day number zero.  This is not
+expected to pose any difficulties to programmers in the real world, however.
+
+The basis for the date conversion algorithms was derived from a detailed
+mathematical analysis by Peter Baum in 1998 and additional formulas and
+algorithms were derived from the current "calendar FAQ".  At that time, Peter's
+information was available from his web site at
+<http://mysite.verizon.net/aesir_research/date/date0.htm> and the FAQ is usually
+multi-posted to the following Usenet news groups: <sci.astro>, <soc.history>,
+<sci.answers>, <soc.answers>, and <news.answers>.  Wikipedia also has lots of
+useful and detailed information available.  Please consult these extensive
+sources of information for more details on the inner workings of the algorithms
+and the historical use of calendars through the centuries.
+
+The syntax of these routines is as follows:
+              
+{JJJJJJJ} ← JD {YYYYMMDD}
+    Converts a calendar-form date to a serial (Julian) day number.  If YYYYMMDD
+    is negative, this indicates that the year itself is negative (not affecting
+    the month or day) and is used to describe a date B.C.  If YYYYMMDD is zero,
+    then the returned JJJJJJJ result will also be zero to facilitate the
+    implementation of "null" dates.  While the example format given above is the
+    primary syntax/usage, alternative syntaxes are also available.  Input dates
+    may be given in "expanded" (⎕TS-like) format where the dates are provided as
+    separate year, month, and day numbers, as long as they are nested together
+    into an enclosed scalar anywhere a simple 8-digit scalar would normally be
+    expected (e.g. ⊂3↑⎕TS).  Also, a time of day may be included to specify a
+    "timestamp" value, either by including a decimal fraction on the date
+    integer with the time in readable form (YYYYMMDD.HHMMSS) or by extending the
+    "expanded" format to have up to 7 items in the nested vector.  In either
+    case, the resulting Julian Day Number will no longer be an integer, but
+    instead will contain the usual day value plus a fractional amount of a day
+    representing the time of day (since midnight) provided.
+
+{YYYYMMDD} ← [expand] GD {JJJJJJJ}
+    Converts a serial day number to a calendar-form date.  If JJJJJJJ is zero,
+    the the returned YYYYMMDD result will also be zero to facilitate the
+    implementation of "null" dates.  To further enhance the ability to
+    interface this with other code and systems, it is also possible to have
+    the dates returned as nested numeric vectors which are the usual scalar
+    dates separated into independent year, month, and day values similar
+    to (⊂3↑⎕TS).  This form of output is produced by specifying a scalar 3 as
+    the optional left argument to the function.  If a fractional serial day
+    number is provided, then a fractional result will be returned giving the
+    time in a readable YYYYMMDD.HHMMSS format.  If full timestamps are desired
+    in enclosed ⎕TS form, supply a left argument of 7.  (Any number between
+    1 and 7 may be used instead for shorter nested results if desired.)
+
+{JJJJJJJ} ← Today
+    Return the current date (⎕TS) in JJJJJJJ form for use by these routines or
+    any other process that can use "standard" Julian Day Numbers.
+    The implementation is simply "JD 100⊥3↑⎕TS".
+
+{JJJJJJJ.FFFFFFFFF} ← Now
+    Return the current date and time (⎕TS) in fractional JJJJJJJ.FFFFFF form
+    for use where a combined timestamp value is preferred.  This is the same as
+    Today (a Julian Day Number), except that it also contains the current time
+    with a fractional portion indicating the time of day (e.g. X.0 = midnight,
+    X.5 = noon, X.75 = 6pm).  This form can be used as a full timestamp and can
+    be processed directly by routines designed for that.  It is also recognized
+    by GD (which can then return a fractional result) & Spell.  The date
+    portion may be extracted with "⌊" and the time portion extracted and
+    converted to seconds with "86400×1|".  The implementation is simply
+    "JD ⊂⎕TS".  Note that most of the other functions here do not accept
+    fractional inputs.
+
+{dayofweek} ← DayOfWeek {JJJJJJJ}
+    For any given Julian day number, return the day of the week on which it
+    falls.  Sunday is given as 1 and Saturday as 7.
+
+{dayofyear} ← DayOfYear {JJJJJJJ}
+    For any given Julian day number, return the day of that year on which it
+    falls.  January 1 is given as 1 and December 31 as 365 or 366.
+
+{isLeap} ← IsLeapYear  {YYYY}
+    For any given year, return a 1 if it is a leap year or a 0 if not.
+
+{ageinyears} ← [today←Today] Age {JJJJJJJ}
+    For a given "starting" date, return a calendar age (in calendar years and
+    fractions thereof) that have elapsed from that date until today (or other
+    specified "ending" date in JJJJJJJ format that is supplied as the left
+    argument).  Fractional years are computed by counting days between the last
+    "birthday" and the next, and thus there may not always be exact half and
+    quarter years for some dates.  Previous, next, and nearest whole ages may
+    be extracted by using floor (⌊), ceiling (⌈), and round (⌊.5+),
+    respectively.
+
+{JJJJJJJ} ← [startday←1] BeginWeek {JJJJJJJ}
+    For a given date, return the date of the first day (Sunday) of the week
+    containing that date (i.e. the Sunday on or immediately preceeding the
+    date given).  If a week is considered to begin on a different day (on
+    Monday or Saturday for example), then that day number (2, 7, etc.) may
+    be provided as a left argument to the routine to logically shift the
+    notion of the "beginning of the week".
+
+{JJJJJJJ} ← [startday←1] BeginMonth {JJJJJJJ}
+    For a given date, return the date of the first day of the calendar month
+    containing that date.  If a month is to be considered to begin on a
+    different day (on the 5th, or the 25th, or other unusual boundary), then
+    that day number (5, 25, etc.) may be provided as a left argument to the
+    routine to logically shift the notion of the "beginning of the month".
+
+{JJJJJJJ} ← [startmonthday←0101] BeginYear {JJJJJJJ}
+    For a given date, return the date of the first day of the calendar year
+    containing that date.  If a year is to be considered to begin on a
+    different day (on March 1st, or December 25th, or other unusual boundary
+    such as those representing fiscal tax years), then that month and day
+    (as a 4-digit number: 0301, 1225, etc.) may be provided as a left argument
+    to the routine to logically shift the notion of the "beginning of the year".
+
+{JJJJJJJ} ← [months←1] AddMonth {JJJJJJJ}
+    Add one calendar month to the date given and return its date.  Zero, or
+    more than one month may be added, or one or more months may be subtracted,
+    by giving the routine a left argument specifying the number of months to
+    add (subtract if negative).  If the day of the month (e.g. 31st) is not
+    part of the following month (e.g. April), then the first legal day
+    following it is returned instead (e.g. May 1st).
+
+{JJJJJJJ} ← [years←1] AddYear {JJJJJJJ}
+    Add one calendar year to the date given and return its date.  Zero, or
+    more than one year may be added, or one or more years may be subtracted, by
+    giving the routine a left argument specifying the number of years to add
+    (subtract if negative).  If the day of the year (e.g. Feb 29th in a leap
+    year) is not part of the resulting year (e.g. it is not a leap year), then
+    the first legal day following it is returned instead (e.g. March 1st).
+
+{JJJJJJJ} ← [weekdays←1] AddWeekday {JJJJJJJ}
+    Add one week day (Monday-Friday) to the date given and return its date.
+    Zero, or more than one week day may be added, or one or more week days may
+    be subtracted, by giving the routine a left argument specifying the number
+    of week days to add (subtract if negative).  If the starting date is not a
+    week day, then the starting date is shifted forward to Monday before
+    counting begins.
+
+{JJJJJJJ} ← [workdays←1] {holidayfilter} AddWorkday {JJJJJJJ}
+    Add one non-holiday week day to the date given and return its date.
+    Zero or more work days may be added, or one or more work days may be
+    subtracted, by giving the routine a left argument specifying the number
+    of work days to add (subtract if negative).  If the starting date is not a
+    work day, then the starting date is shifted forward to the next legal work
+    day before counting begins.
+
+    This routine is identical to the AddWeekday function except that it skips
+    over holidays as well as weekends.  This is an operator instead of a
+    function and it takes as its required left operand a function that
+    determines whether or not a provided Julian day is to be considered a
+    holiday or not.  For each argument date it should return a 1 (for a
+    holiday) or a 0 (for a work day).  The included function ExampleHoliday
+    is an example of this sort of operand and reports official U.S. banking
+    holidays.
+
+{isholiday} ← ExampleHoliday {JJJJJJJ}
+    For use as an operand to AddWorkday, an example for determining holidays.
+    Return a 1 if the given date is a recognized U.S. national banking holiday
+    or a 0 otherwise.  The following holidays are recognized (on date
+    observed):
+        New Years Day       Independence Day    Thanksgiving
+        MLK's Birthday      Labor Day           Christmas
+        President's Day     Columbus Day
+        Memorial Day        Veterans Day
+
+{JJJJJJJ} ← Easter {YYYY}
+    Return the date that Easter falls on in a given year.  This is a difficult
+    calculation.  The rule used is:  Easter Sunday is the first Sunday after
+    the ecclesiastical full moon on or after the ecclesiastical vernal equinox.
+    The ecclesiastical vernal equinox is always March 21st.  The astronomical
+    vernal equinox may actually occur on the 19th or 20th and the
+    ecclesiastical full moon may differ from the actual astronomical full moon
+    by a day either way.  There are also variances to take into account for
+    effective longitude and the effects of the international date line.  The
+    ecclesiastical rules define how these effects are all handled.  This
+    function uses the above rule for Gregorian calendar dates (after 1582) and
+    a simpler calculation for older Julian calendar dates (before 1583).
+
+{text} ← {pattern} Spell {JJJJJJJ}
+    Format a given date or timestamp as text.  The format to be used is
+    specified by use of a pattern phrase provided as the left argument.  This
+    is a cover function that calls the system facility 1200⌶ and the pattern
+    to be provided is defined by that facility.  Timestamps to be formatted
+    must fall within the range limits set by 1200⌶ and ⎕DT.  Examples include:
+        MMM D, YYYY
+        YYYY-MM-DD
+        MM/DD/YY
+        t:mmp "on" Dddd, Mmmm Doo, YYYY
+
+    Formatted text is returned as a variable-length character vector.  A vector
+    (or matrix) of timestamps is returned as a vector (or matrix) of character
+    vectors.  However, a scalar (not a 1⍴ vector) timestamp value is returned
+    as an unnested character vector for convenience.
+    A "null" timestamp (Julian Day Number = 0.0) or a value of ⎕NULL is
+    formatted as an empty character vector (regardless of the pattern format
+    requested) to conveniently deal with "missing" or "undefined" timestamps.
+
+{DST} ← Daylight {YYYY}
+    Return Daylight Savings Time rules for the specified year(s) in the local
+    time zone.  The result is in the same shape as the argument, but with each
+    item being nested and containing three numeric values for that year:
+        [1] Number of hours to add to the time zone during DST
+        [2] The timestamp when DST begins in that year
+        [3] The timestamp when DST ends in that year
+    If the argument is a scalar (not a 1⍴ vector) then the result is returned
+    unnested for convenience.
+
+{JJJJJJJ.FFFFFFFFF} ← Local {JJJJJJJ.FFFFFFFFF}
+    Given a UTC (Universal Time) timestamp in JDN form, convert it to a local
+    timezone timestamp in similar form.  This conversion process respects any
+    Daylight Savings Time adjustment that was in effect on that date.
+
+{JJJJJJJ.FFFFFFFFF} ← UTC {JJJJJJJ.FFFFFFFFF}
+    Given a local timestamp in JDN form, convert it to a UTC (Universal Time)
+    timezone timestamp in similar form.  This conversion process respects any
+    Daylight Savings Time adjustment that was in effect on that date.
+
+{tz} ← TimeZone
+    Return static information about the local time zone.
+    [1] ← Number of standard-time hours offset from UTC (Univeral Time)
+    [2] ← Name of time zone
+    [3] ← Descriptive title of time zone
+    [4] ← Title of standard time zone
+    [5] ← Title of daylight savings time zone
+
+
+
+*** Examples of application use ***
+
+    Today+7
+A week from today.
+
+    14 ExampleHoliday AddWorkday ⍵
+14 working days from a starting date.
+
+    ¯1+AddMonth BeginMonth ⍵
+Find the last day of the month.
+
+    6 BeginWeek ⍵
+Find the most-recent Friday.
+
+    2 BeginWeek 7+AddMonth BeginMonth ⍵
+The first Monday of next month.
+
+    ¯3 ExampleHoliday AddWorkday AddMonth BeginMonth ⍵
+The last day of the month a shipment could be sent to arrive by the first of
+next month, assuming it takes 3 working days to arrive.
+
+    2415019+⍵
+Convert a date-value from Microsoft Excel into this notation.
+
+    2 BeginWeek 7+BeginYear ⍵
+The first Monday of the year.
+
+    6 BeginWeek ¯8+AddMonth BeginMonth ⍵
+The next-to-last Friday of the month.
+
+    WW {⍵+7×(⍺=5)∧=/BeginMonth ⍵+0 7} DOW BeginWeek JD⊂YYYY,MM,7×4⌊WW
+Compute the date from a year, month, week (up to 5), and day-of-week.
