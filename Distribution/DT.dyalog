@@ -363,7 +363,7 @@ Describe←_
 
 ⍝ === End of variables definition ===
 
-(⎕IO ⎕ML ⎕WX ⎕PP ⎕CT)←1 1 3 34 1E¯13
+(⎕IO ⎕ML ⎕WX ⎕CT)←1 1 3 1E¯13
 
 ∇ next←{count}AddMonth JJJ;ymd;ym;s;y;m
      ⍝ Given a "Julian Day Number", return the number of the date which is
@@ -729,9 +729,16 @@ Describe←_
      ⍝ Format a date or timestamp (based on a Julian Day Number) into a specified format.
      ⍝ Since this routine depends on 1200⌶ all data (except the constant 0) must follow
      ⍝ its range restrictions.
+     ⍝ Written 30 June 2020 by Davin Church of Creative Software Design
+     ⍝ Note:  Requires Dyalog APL v18.0 or later
      
  JJJ←0.5-⍨(,nonzero←(JJJ≠0)∧~JJJ∊⎕NULL)/,JJJ ⍝ Format zeros as ''
- text←(⍴nonzero)⍴1↓(1,,nonzero)\(⊂''),pattern(1200⌶)50 1 ⎕DT JJJ
+ :Trap 0
+     text←pattern(1200⌶)50 1 ⎕DT JJJ
+ :Else
+     ⎕DMX.Message ⎕SIGNAL 11
+ :EndTrap
+ text←(⍴nonzero)⍴1↓(1,,nonzero)\(⊂''),text
  :If 0=≡nonzero ⋄ text←⊃text ⋄ :EndIf ⍝ Don't enclose scalar results
 ∇
 
