@@ -19,7 +19,8 @@ ordinary APL if it isn't.
 1200⌶ is also used by a cover function to format dates and times.  This is expected to be updated when 1200⌶
 is one day integrated into ⎕DT itself.
 
-A Describe variable is included in the namespace for simple documentation of the tools available.
+A Describe variable is included in the namespace for simple documentation of the tools available.  More
+comprehensive documentation is under construction, as is a suite of testing tools.
 
 Any problems, suggestions, or requests should be reported to the author.  Otherwise, enjoy the calculation
 flexibility that these tools provide.
