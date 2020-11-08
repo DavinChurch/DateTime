@@ -1,4 +1,4 @@
- tz←TimeZone
+ tz←TimeZone;⎕USING
  ⍝ Return base information about the local time zone
 
- tz←System.TimeZoneInfo.Local.(BaseUtcOffset.TotalHours Id DisplayName StandardName DaylightName)
+ ⎕USING←'' ⋄ tz←System.TimeZoneInfo.Local.(BaseUtcOffset.TotalHours Id DisplayName StandardName DaylightName)
