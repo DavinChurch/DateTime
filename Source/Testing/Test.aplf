@@ -1,5 +1,8 @@
- Errors←Test fns;∆wl;exp;nl3
+ Errors←{stop}Test fns;∆wl;exp;nl3
 ⍝∇ Provide zero or more names of testing fns to execute, in any structure, possibly including "*"s
+
+ :If 0=⎕NC'stop' ⋄ :If 0=⎕NC'StopOnError' ⋄ stop←1 ⋄ :Else ⋄ stop←StopOnError ⋄ :EndIf ⋄ :EndIf
+ ⎕SHADOW'StopOnError' ⋄ StopOnError←stop ⍝ Provide local override for StopOnError
  nl3←(⎕NL ¯3)~1↑⎕SI ⋄ nl3←((1 ⎕AT nl3)∧.=0)/nl3 ⍝ Functions (local only) that can be called for testing
  ∆wl←{⍺←'' ⋄ (('[^ ',(∊{'\x{',(⎕D,⎕A)[1+⍉(8⍴16)⊤⎕UCS ⍵],'}'}¨,⍺),']+')⎕S'&'){1≥|≡⍵:,' ',⍕⍵ ⋄ ⊃,/∇¨(,⍵),⊂''}⍵} ⍝ Word-list decomposer
  exp←{(('\?'⎕R'.')('\*'⎕R'.*')('\.'⎕R'\\.')'^',⍵,'$')⎕S'&'⊢⍺} ⍝ Expand wild-carded names and restrict with ⎕NL
