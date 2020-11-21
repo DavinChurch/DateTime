@@ -24,11 +24,11 @@
 ⍝ Converted from APL+Win to Dyalog June 29, 2020 by Davin Church of Creative Software Design
 
  :If 18≤2⊃⎕VFI 3↑2⊃'.'⎕WG'APLVersion' ⍝ Use ⎕DT if it's available
- :AndIf (∧/,1721426≤JJJ)∧∧/,3182088≥JJJ ⍝ ...and within range
+ :AndIf (∧/,JJJ≠0)∧∧/,50 0 ⎕DT JJJ ⍝ ...and within supported range
      JJJ←JJJ-0.5 ⍝ ⎕DT starts at noon instead of midnight as we prefer
      :If 0=⎕NC'expand' ⋄ :OrIf ~(⊃expand)∊⍳7 ⋄ YMD←50 60 ⎕DT JJJ
      :Else ⋄ YMD←(⊃expand)↑¨50 ¯1 ⎕DT JJJ ⋄ :EndIf
- :Else ⍝ Older version of system - simulate ⎕DT
+ :Else ⍝ Older version of system - simulate ⎕DT and allow for extra situations
      ⎕CT←1E¯16 ⍝ Avoid some millisecond rounding problems
      nz←JJJ≠0 ⋄ :If f←1∊0≠FFF←1||JJJ ⋄ JJJ←(×JJJ)×⌊|JJJ ⋄ :EndIf
      JJJ←(JJJ+10×JJJ>2299160)-1721117 ⋄ j1600←0⌈(j←JJJ-0.25)-584400
