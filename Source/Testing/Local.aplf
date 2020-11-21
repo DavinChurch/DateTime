@@ -1,0 +1,3 @@
+ Local;testfn;jd
+ testfn←#.DateTime.Local ⋄ jd←#.DateTime.JD
+ (testfn Pass (jd 20201201.0703))jd 20201201.1303 ⍝ Test only works where 12/01/2020 is not in DST

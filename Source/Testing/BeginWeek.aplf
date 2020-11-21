@@ -1,0 +1,5 @@
+ BeginWeek;testfn;jd
+ testfn←#.DateTime.BeginWeek ⋄ jd←#.DateTime.JD
+ (testfn Pass(jd⊂2020 11 15))jd⊂2020 11 20
+ (testfn Pass(jd⊂2020 11 22))jd⊂2020 11 22
+ 3(testfn Pass(jd⊂2020 11 17))jd⊂2020 11 20

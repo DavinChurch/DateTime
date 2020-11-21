@@ -1,0 +1,5 @@
+ DayOfYear;testfn;jd
+ testfn←#.DateTime.DayOfYear ⋄ jd←#.DateTime.JD
+ (testfn Pass 15)jd⊂2020 1 15
+ 4(testfn Pass 15)jd⊂2020 1 15
+ 105(testfn Pass 11)jd⊂2020 1 15

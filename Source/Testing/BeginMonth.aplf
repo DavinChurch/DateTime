@@ -1,0 +1,5 @@
+ BeginMonth;testfn;jd
+ testfn←#.DateTime.BeginMonth ⋄ jd←#.DateTime.JD
+ (testfn Pass(jd⊂2020 11 1))jd⊂2020 11 22
+ 5(testfn Pass(jd⊂2020 11 5))jd⊂2020 11 22
+ 10(testfn Pass(jd⊂2020 10 10))jd⊂2020 11 1

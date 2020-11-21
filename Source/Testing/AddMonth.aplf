@@ -1,0 +1,8 @@
+ AddMonth;testfn;jd
+ testfn←#.DateTime.AddMonth ⋄ jd←#.DateTime.JD
+ (testfn Pass(jd 20201208))jd 20201108
+ 1(testfn Pass(jd 20201208))jd 20201108
+ ¯1(testfn Pass(jd 20201008))jd 20201108
+ 2(testfn Pass(jd 20210108))jd 20201108
+ (testfn Pass(jd 20200301))jd 20200131
+ 2(testfn Pass(jd 20200331))jd 20200131

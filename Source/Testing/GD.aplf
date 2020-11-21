@@ -1,0 +1,6 @@
+ GD;testfn;jd
+ testfn←#.DateTime.GD ⋄ jd←#.DateTime.JD
+ (testfn Pass 0)0
+ (testfn Pass 20201120)2459174
+ 3(testfn Pass(⊂2020 11 20))2459174
+ 7(testfn Pass(⊂2020 11 20 20 8 14 0))2459174.83905093

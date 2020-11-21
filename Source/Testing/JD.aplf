@@ -1,0 +1,9 @@
+ JD;testfn
+ testfn←#.DateTime.JD
+ (testfn Pass 0)0
+ (testfn Pass 2459174)20201120
+ (testfn Pass 2459174)⊂2020 11 20
+ (testfn Pass 2459174.83905093)⊂2020 11 20 20 8 14 0
+ (testfn Pass 2459154)⊂2020 11 0
+ (testfn Pass 2459153)⊂2020 11 ¯1
+ (testfn Pass 2459216)⊂2020 13 1

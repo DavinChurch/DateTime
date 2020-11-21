@@ -1,0 +1,3 @@
+ IsLeapYear;testfn
+ testfn←#.DateTime.IsLeapYear
+ (testfn Pass 0 1)2019 2020

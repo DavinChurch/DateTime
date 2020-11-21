@@ -1,0 +1,3 @@
+ Daylight;testfn;jd
+ testfn←#.DateTime.Daylight ⋄ jd←#.DateTime.JD
+ (testfn Pass{3=⍴⍵})⎕TS[1]

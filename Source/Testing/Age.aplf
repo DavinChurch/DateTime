@@ -1,0 +1,6 @@
+ Age;testfn;jd
+ testfn←#.DateTime.Age ⋄ jd←#.DateTime.JD
+ (testfn Pass{⍵∊30÷365 366})(jd⊂3↑⎕TS)-30
+ (testfn Pass{⍵∊¯30÷365 366})(jd⊂3↑⎕TS)+30
+ (testfn Pass 0) 0
+ (jd⊂20200101) (testfn Pass 10) jd⊂20100101

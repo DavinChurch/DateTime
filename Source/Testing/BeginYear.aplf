@@ -1,0 +1,7 @@
+ BeginYear;testfn;jd
+ testfn←#.DateTime.BeginYear ⋄ jd←#.DateTime.JD
+ (testfn Pass(jd⊂2020 1 1))jd⊂2020 11 20
+ 1(testfn Pass(jd⊂2020 1 5))jd⊂2020 11 20
+ 5(testfn Pass(jd⊂2020 1 2))jd⊂2020 11 20
+ 115(testfn Pass(jd⊂2020 1 15))jd⊂2020 11 20
+ 1201(testfn Pass(jd⊂2019 12 1))jd⊂2020 11 20

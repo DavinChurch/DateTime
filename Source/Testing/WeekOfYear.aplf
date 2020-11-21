@@ -1,0 +1,5 @@
+ WeekOfYear;testfn;jd
+ testfn←#.DateTime.WeekOfYear ⋄ jd←#.DateTime.JD
+ (testfn Pass 3)jd⊂2020 1 15
+ 6(testfn Pass 2)jd⊂2020 1 15
+ 110(testfn Pass 1)jd⊂2020 1 15

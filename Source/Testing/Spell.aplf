@@ -1,0 +1,5 @@
+ Spell;testfn;jd
+ testfn←#.DateTime.Spell ⋄ jd←#.DateTime.JD
+ 'MMM D, YYYY'(testfn Pass'NOV 20, 2020')jd 20201120
+ 'MM/DD/YY'(testfn Pass'')0
+ 'MM/DD/YY'(testfn Pass'')⎕NULL

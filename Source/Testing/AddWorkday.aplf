@@ -1,0 +1,12 @@
+ AddWorkday;testfn;jd
+ testfn←#.DateTime.ExampleHoliday #.DateTime.AddWorkday ⋄ jd←#.DateTime.JD
+ (testfn Pass(jd 20201110))jd 20201108
+ (testfn Pass(jd 20201110))jd 20201107
+ (testfn Pass(jd 20201109))jd 20201106
+ (testfn Pass(jd 20201106))jd 20201105
+ (testfn Pass(jd 20201112))jd 20201110 ⍝ A weekday holiday
+ 2(testfn Pass(jd 20201113))jd 20201110 ⍝ Skipping a weekday holiday
+ ¯1(testfn Pass(jd 20201106))jd 20201108
+ ¯1(testfn Pass(jd 20201106))jd 20201109
+ ¯1(testfn Pass(jd 20201109))jd 20201110
+ ¯2(testfn Pass(jd 20201106))jd 20201110

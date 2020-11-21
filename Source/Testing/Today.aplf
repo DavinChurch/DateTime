@@ -1,0 +1,3 @@
+ Today;testfn
+ testfn←{#.DateTime.Today}
+ (testfn Pass(0.5+¯1 50 ⎕DT⊂3↑⎕TS))⍬
