@@ -1,3 +1,5 @@
- Local;testfn;jd
+ Local;testfn;jd;me;gmt
  testfn←#.DateTime.Local ⋄ jd←#.DateTime.JD
- (testfn Pass (jd 20201201.0703))jd 20201201.1303 ⍝ Test only works where 12/01/2020 is not in DST
+ gmt←jd 20201212.1212 ⍝ Test with UTC time at 12:12pm on 12/12/2020
+ me←gmt+(1⊃#.DateTime.TimeZone)÷24 ⍝ Figure what my local time should be
+ (testfn Pass me)gmt

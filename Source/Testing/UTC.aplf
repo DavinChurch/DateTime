@@ -1,3 +1,5 @@
- UTC;testfn;jd
+ UTC;testfn;jd;me;gmt
  testfn←#.DateTime.UTC ⋄ jd←#.DateTime.JD
- (testfn Pass(jd 20201201.1303))jd 20201201.0703 ⍝ Test only works where 12/01/2020 is not in DST
+ me←jd 20201212.1212 ⍝ Test with my time at 12:12pm on 12/12/2020
+ gmt←me-(1⊃#.DateTime.TimeZone)÷24 ⍝ Figure what UTC time should be
+(testfn Pass gmt)me
