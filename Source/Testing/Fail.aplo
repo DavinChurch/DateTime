@@ -1,4 +1,4 @@
- rpt←{left}(testfn Fail expect)right;at;result;validate;⎕TRAP;nrr;failure
+ rpt←{left}(testfn Fail expect)right;at;result;validate;⎕TRAP;nrr;failure;⎕IO;IO
  ⍝ Perform a unit-test on a simple function call that takes arguments and returns a result.
  ⍝ Execute <testfn> with arguments {left} and <right> and expect it to ⎕SIGNAL an error
  ⍝ where ⎕EN∊<expect> (if numeric) or <expect>≡⊃⎕DM (if character).
@@ -13,7 +13,7 @@
  ⍝  ¯1←Do not stop, and increment global variable "Errors" if it exists
  ⍝ See also ∇Pass/∇Pass_ to run tests that do not signal errors.
 
- rpt←0 0⍴'' ⋄ at←⊃⎕AT'testfn' ⋄ nrr←at[1]=0
+ IO←⎕IO ⋄ ⎕IO←1 ⋄ rpt←0 0⍴'' ⋄ at←⊃⎕AT'testfn' ⋄ nrr←at[1]=0
  'Test-fn is niladic'⎕SIGNAL 2/⍨at[2]=0
  'Test-fn is monadic'⎕SIGNAL 2/⍨(at[2]=1)∧0≠⎕NC'left'
  'Test-fn is dyadic'⎕SIGNAL 2/⍨(at[2]=2)∧0=⎕NC'left'
@@ -29,9 +29,9 @@
      at←⊃⎕AT'expect'
      'Validation-fn does not return a result'⎕SIGNAL 2/⍨at[1]=0
      :Select at[2]
-     :Case 0 ⋄ validate←{expect}
-     :Case 1 ⋄ validate←{expect ⍵}
-     :CaseList 2 ¯2 ⋄ validate←{⍺ expect ⍵}
+     :Case 0 ⋄ validate←{⎕IO←IO ⋄ expect}
+     :Case 1 ⋄ validate←{⎕IO←IO ⋄ expect ⍵}
+     :CaseList 2 ¯2 ⋄ validate←{⎕IO←IO ⋄ ⍺ expect ⍵}
      :EndSelect
  :Else
      'Validation operand is not a fn or var'⎕SIGNAL 2
@@ -39,8 +39,8 @@
 
  failure←0 ⋄ ⎕TRAP←0 'E' '(1↓∊(⎕UCS 13),[⎕IO+.5]⎕DM)⎕SIGNAL(''Fail''≢⊃⎕SI)/⎕EN ⋄ failure←1 ⋄ →⎕LC+1'
  :If 2=⎕NC'StopOnError' ⋄ :AndIf 2∊StopOnError ⋄ ⎕TRAP←0/⎕TRAP ⋄ :EndIf
- result←left testfn right
- ⎕TRAP←0/⎕TRAP
+ ⎕IO←IO ⋄ result←left testfn right
+ ⎕IO←1 ⋄ ⎕TRAP←0/⎕TRAP
 
  :If ~failure
      rpt←'Test-fn ran to completion without signalling an error!'
