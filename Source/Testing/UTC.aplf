@@ -2,4 +2,4 @@
  testfn←#.DateTime.UTC ⋄ jd←#.DateTime.JD
  me←jd 20201212.1212 ⍝ Test with my time at 12:12pm on 12/12/2020
  gmt←me-(1⊃#.DateTime.TimeZone)÷24 ⍝ Figure what UTC time should be
-(testfn Pass gmt)me
+ (testfn Pass gmt)me

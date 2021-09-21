@@ -1,3 +1,3 @@
  ExampleHoliday;testfn;jd
  testfn←#.DateTime.ExampleHoliday ⋄ jd←#.DateTime.JD
- (testfn Pass 1 0 1)jd (2020 1 1) (2020 4 1) (2020 11 11)
+ (testfn Pass 1 0 1)jd(2020 1 1)(2020 4 1)(2020 11 11)
