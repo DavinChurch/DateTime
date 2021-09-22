@@ -6,7 +6,7 @@ Simple calculations with serial date numbers such as these simply involve adding
 
 The basic functionality begins with two functions that convert back and forth between Julian Day Number and Gregorian Date, for interfacing with other systems.  These functions use ⎕DT if it is available or will calculate it in ordinary APL if it isn't.  Most of the remaining tools perform calculations directly on the Julian Day Numbers.
 
-1200⌶ is also used by a cover function to format dates and times.  This is expected to be updated when 1200⌶ is one day integrated into ⎕DT itself.
+1200⌶ is also used by a cover function (Spell) to format dates and times.  Spell is expected to be updated when 1200⌶ is one day integrated into ⎕DT itself.
 
 Complete documentation for these tools is available here, as is a suite of testing tools.
 
