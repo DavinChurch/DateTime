@@ -32,4 +32,4 @@ This directory is its own namespace which contains facilities for testing all th
 
 Most of the functions herein are named after the corresponding public routines in DateTime.  Simply execute the desired function here to test the corresponding DateTime routine.  If multiple functions are to be tested, the `Test` function may be invoked with a list of function names (in almost any reasonable structure and format) as a right argument.  These names may include an `*` wild-card character, so `Test '*'` will execute all the functions in the workspace.
 
-For more details on using `Test` and the testing engine, see the [Tester](https://github.com/DavinChurch/Tester) package in the companion repository.
+For more details on using `Test` and the testing engine, see the [Tester package](https://github.com/DavinChurch/Tester) in the companion repository.
