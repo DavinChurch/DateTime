@@ -1,6 +1,6 @@
 # Introduction to DateTime
 
-These are date-manipulation routines for calculating with dates as Julian Day Numbers (not Julian Dates) using Dyalog APL.  They support and use ⎕DT and 1200⌶ from Dyalog APL v18.0 and later, but almost all of the functionality is available in earlier versions of APL as well.
+These are date-manipulation routines for calculating with dates as Julian Day Numbers (not Julian Dates) using Dyalog APL.  They support and use ⎕DT (and 1200⌶ at present) from Dyalog APL v18.0 and later, but almost all of the functionality is available in earlier versions of APL as well.
 
 Simple calculations with serial date numbers such as these simply involve adding and subtracting a number of days, but these tools are available for more complicated calculations such as adding/subtracting calendar months, years, weekdays, and working days, and finding the day of week/month/year, the beginning of weeks, months, years, calendar ages, and similar functionality.  Timestamps are also supported for some processes by using a fractional date, and time-sensitive functions are available for changing between local and UTC time zones, determining time zones, daylight savings time adjustments, and so on.
 
@@ -12,11 +12,11 @@ Complete documentation for these tools is available here, as is a suite of testi
 
 # Repository Organization
 
-This is a member of the APLTree project at https://github.com/aplteam/apltree.
+This is a member of the [APLTree project](https://github.com/aplteam/apltree) and is also available via the [Tatin package manager](https://github.com/aplteam/Tatin).
 
 ## The Distribution Directory
 
-This directory contains a workspace copy of the code for those that desire that form.  However, it is expected that most distribution will be done with the individual source code text files in the Source directory.
+This directory contains a workspace copy of the code for those that desire that form.  However, it is expected that most distribution will be done with the individual source code text files in the Source directory. A namespace script is also available here for those that prefer that distribution mechanism.
 
 ## The Documentation Directory
 
@@ -32,4 +32,4 @@ This directory is its own namespace which contains facilities for testing all th
 
 Most of the functions herein are named after the corresponding public routines in DateTime.  Simply execute the desired function here to test the corresponding DateTime routine.  If multiple functions are to be tested, the `Test` function may be invoked with a list of function names (in almost any reasonable structure and format) as a right argument.  These names may include an `*` wild-card character, so `Test '*'` will execute all the functions in the workspace.
 
-For more details on using `Test` and the testing engine, see the `Tester` package in the companion repository.
+For more details on using `Test` and the testing engine, see the [Tester](https://github.com/DavinChurch/Tester) package in the companion repository.
