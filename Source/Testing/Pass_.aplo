@@ -1,4 +1,4 @@
- rpt←{left}(testfn Pass_ expect)right;at;result;validate;⎕TRAP;nrr;failure;⎕IO;IO
+ rpt←{left}(testfn Pass_ expect)right;at;result;validate;⎕TRAP;nrr;failure;⎕IO;IO;⎕ML;ML;stopon;stopoff
  ⍝ Perform a unit-test on a simple function call that takes arguments and is expected to NOT return a result.
  ⍝ Execute <testfn> with arguments {left} and <right> and expect no result to be returned.
  ⍝ <expect> should be a function (passed ⍬ as any arguments) that validates
@@ -11,7 +11,7 @@
  ⍝ See also ∇Pass to run tests that return result values to be verified.
  ⍝ and ∇Fail to test production of ⎕SIGNAL error reports.
 
- IO←⎕IO ⋄ ⎕IO←1 ⋄ rpt←0 0⍴'' ⋄ at←⊃⎕AT'testfn' ⋄ nrr←at[1]=0
+ IO←⎕IO ⋄ ML←⎕ML ⋄ ⎕IO←⎕ML←1 ⋄ rpt←0 0⍴'' ⋄ at←⊃⎕AT'testfn' ⋄ nrr←at[1]=0 ⋄ stopon←stopoff←⍬
  'Test-fn is niladic'⎕SIGNAL 2/⍨at[2]=0
  'Test-fn is monadic'⎕SIGNAL 2/⍨(at[2]=1)∧0≠⎕NC'left'
  'Test-fn is dyadic'⎕SIGNAL 2/⍨(at[2]=2)∧0=⎕NC'left'
@@ -21,40 +21,54 @@
      at←⊃⎕AT'expect'
      'Validation-fn does not return a result'⎕SIGNAL 2/⍨at[1]=0
      :Select at[2]
-     :Case 0 ⋄ validate←{⎕IO←IO ⋄ expect}
-     :Case 1 ⋄ validate←{⎕IO←IO ⋄ expect ⍵}
-     :CaseList 2 ¯2 ⋄ validate←{⎕IO←IO ⋄ ⍺ expect ⍵}
+     :Case 0 ⋄ validate←{⎕IO←IO ⋄ ⎕ML←ML ⋄ expect}
+     :Case 1 ⋄ validate←{⎕IO←IO ⋄ ⎕ML←ML ⋄ expect ⍵}
+     :CaseList 2 ¯2 ⋄ validate←{⎕IO←IO ⋄ ⎕ML←ML ⋄ ⍺ expect ⍵}
      :EndSelect
  :Else
      'Validation operand is not a fn'⎕SIGNAL 2
  :EndSelect
 
+ :If 2=⎕NC'StopOnTest' ⍝ Allow ⎕STOP-points to be defined in the tested functions
+     :For stopon :In ⊆StopOnTest
+         stopon←('['(≠⊆⊢)¨'@'(≠⊆⊢)stopon)~¨¨⊂⊂'[ ]' ⍝ Parse structure: TesterFn[9] or TesterFn[9]@TestedFn[1]
+         :If (1 1⊃stopon)≡⊃1↓⎕SI ⋄ :AndIf (⊃⊃(//)⎕VFI 1 2⊃stopon)=⊃1↓⎕LC ⍝ Are we where we want to stop?
+             :If 2>≢stopon
+                 stopon←(' ∇'~⍨⍕⎕OR'testfn')1 ⍝ Let's stop at the beginning of the tested fn
+             :Else
+                 stopon←2↑(2⊃stopon),'1' ⋄ stopon[2]←⊃⊃(//)⎕VFI 2⊃stopon ⍝ Where shall we stop?
+             :EndIf
+             (stopon[2],⎕STOP 1⊃stopon)⎕STOP 1⊃stopon ⋄ stopoff←stopoff,⊂stopon ⍝ Add to existing stops
+         :EndIf
+     :EndFor
+ :EndIf
  failure←0 ⋄ ⎕TRAP←0 'E' '(1↓∊(⎕UCS 13),[⎕IO+.5]⎕DM)⎕SIGNAL(''Pass_''≢⊃⎕SI)/⎕EN ⋄ failure←1 ⋄ →⎕LC+1'
  :If 2=⎕NC'StopOnError' ⋄ :AndIf 2∊StopOnError ⋄ ⎕TRAP←0/⎕TRAP ⋄ :EndIf
  :If nrr
-     ⎕IO←IO ⋄ left testfn right
+     ⎕IO←IO ⋄ ⎕ML←ML ⋄ left testfn right
      result←⍬ ⍝ This cannot return a result
  :Else
-     ⎕IO←IO ⋄ result←left testfn right
+     ⎕IO←IO ⋄ ⎕ML←ML ⋄ result←left testfn right
      :If ~failure
-         rpt←'Test-fn produced a result:',(⎕UCS 13),⎕SE.UCMD'Disp result'
+         rpt←'Test-fn produced a result:',(⎕UCS 13),⎕SE.Dyalog.Utils.disp result
      :EndIf
  :EndIf
- ⎕IO←1 ⋄ ⎕TRAP←0/⎕TRAP
+ ⎕IO←⎕ML←1 ⋄ ⎕TRAP←0/⎕TRAP
+ :For stopon :In stopoff ⋄ (stopon[2]~⍨⎕STOP 1⊃stopon)⎕STOP 1⊃stopon ⋄ :EndFor ⍝ Remove from existing stops
 
  :If failure∧(⎕EN=6)∧(~(⎕UCS 13)∊⊃⎕DM)∧∨/'left testfn right'⍷⊃1↓⎕DM
      result←⍬ ⍝ This is the expected case (a returned VALUE ERROR)
  :ElseIf failure
-     rpt←1↓∊(⎕UCS 13),[⎕IO+0.5]⎕DM
+     rpt←1↓∊(⎕UCS 13),[1.5]⎕DM
  :EndIf
 
  :If 0∊⍴rpt
      :Trap 0
-         :If ~⍬ validate ⍬
+         :If ~⍬ validate ⍬ ⍝ No data is available to pass to the validation function
              rpt←'Test-fn failed validation'
          :EndIf
      :Else
-         rpt←'Validation processing function failed to complete!',∊(⎕UCS 13),[⎕IO+0.5]⎕DM
+         rpt←'Validation processing function failed to complete!',∊(⎕UCS 13),[1.5]⎕DM
      :EndTrap
  :EndIf
 
