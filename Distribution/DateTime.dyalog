@@ -75,8 +75,8 @@ MS0Date←2415019
      ⍝ Converted from APL+Win to Dyalog June 30, 2020 by Davin Church of Creative Software Design
      
  :If 0=⎕NC'today' ⋄ today←JD 100⊥3↑⎕TS ⋄ :EndIf
- (start bday)←GD today JJJ ⋄ age←⌊(start-bday)÷10000
- next←10000+this←bday+10000×age ⋄ (this next)←JD this next
+ (start bday)←GD¨today JJJ ⋄ age←⌊(start-bday)÷10000
+ next←10000+this←bday+10000×age ⋄ (this next)←JD¨this next
  age←(today≠0)×(JJJ≠0)×age+(today-this)÷(JJJ=0)+next-this ⍝ Add fractional year to whole year count
 ∇
 
