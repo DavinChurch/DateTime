@@ -9,6 +9,7 @@
 ⍝   MLK Jr.'s Birthday, 3rd Monday in January
 ⍝   President's Day,    3rd Monday in February
 ⍝   Memorial Day,       Last Monday in May
+⍝   Juneteenth,         June 19th
 ⍝   Independence Day,   July 4th
 ⍝   Labor Day,          1st Monday in September
 ⍝   Columbus Day,       2nd Monday in October
@@ -17,7 +18,9 @@
 ⍝   Christmas Day,      December 25th
 ⍝ The above dates are not considered holidays if they fall on a
 ⍝ Saturday, but the following Monday is the observed holiday if the
-⍝ exact date falls on a Sunday.
+⍝ exact date falls on a Sunday.  One exception is Juneteenth which
+⍝ is a holiday if it falls on a Saturday as well, except that it is
+⍝ celebrated on the previous Friday instead.
 ⍝
 ⍝ (These holidays definitions are not useful prior to the last few
 ⍝ decades of the 20th century, but are still computed back to 1 A.D.)
@@ -31,6 +34,10 @@
 ⍝ *** First check for fixed-date holidays
  days←1+7|1+months←JD 101 704 1111 1225∘.+years×10000
  h←h,(7≠,days)/,months+days=1 ⍝ Ignore Saturdays & move Sundays to Mondays
+
+⍝ *** And check for semi-fixed-date holidays (those that can't land on a weekend)
+days←1+7∣1+months←JD 0619∘.+years×10000
+h←h,,months+(days=1)-days=7 ⍝ Move Saturdays to Fridays & Sundays to Mondays
 
 ⍝ *** Now watch for moveable holidays throughout the year
 ⍝ First, get all beginning-of-month dates and starting days
