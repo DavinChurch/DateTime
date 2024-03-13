@@ -4,11 +4,11 @@ These are date-manipulation routines for calculating with dates as Julian Day Nu
 
 Simple calculations with serial date numbers such as these simply involve adding and subtracting a number of days, but these tools are available for more complicated calculations such as adding/subtracting calendar months, years, weekdays, and working days, and finding the day of week/month/year, the beginning of weeks, months, years, calendar ages, and similar functionality.  Timestamps are also supported for some processes by using a fractional date, and time-sensitive functions are available for changing between local and UTC time zones, determining time zones, daylight savings time adjustments, and so on.
 
-The basic functionality begins with two functions that convert back and forth between Julian Day Number and Gregorian Date, for interfacing with other systems.  These functions use ⎕DT if it is available or will calculate it in ordinary APL if it isn't.  Most of the remaining tools perform calculations directly on the Julian Day Numbers.
+The basic functionality begins with two functions that convert back and forth between Julian Day Number and Gregorian Date, for interfacing with other systems.  These functions use ⎕DT if it is available or will calculate it in ordinary APL if it isn't.  Most of the remaining tools perform calculations directly on the Julian Day Numbers. ⎕DT may be used to convert dates in any other form into either of these for use with these tools.
 
 1200⌶ is also used by a cover function (Spell) to format dates and times.  Spell is expected to be updated when 1200⌶ is one day integrated into ⎕DT itself.
 
-Complete documentation for these tools is available here, as is a suite of testing tools.
+Complete documentation for these tools is available here, as are examples and a suite of testing tools.
 
 # Repository Organization
 
